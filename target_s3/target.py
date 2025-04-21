@@ -133,6 +133,11 @@ class Targets3(Target):
             description="The S3 key stream name override.",
         ),
         th.Property(
+            "stream_name_function_applied",
+            th.StringType,
+            description="The string function applied to stream name.",
+        ),
+        th.Property(
             "include_process_date",
             th.BooleanType,
             description="A flag indicating whether to append _process_date to record.",
@@ -175,6 +180,12 @@ class Targets3(Target):
             description="The grain of the date to append to the filename.",
             allowed_values=DATE_GRAIN.keys(),
             default="day",
+        ),
+        th.Property(
+            "append_date_shift_back_seconds",
+            th.IntegerType,
+            description="The seconds to shift back on the date to append",
+            default=0,
         ),
         th.Property(
             "max_batch_age",

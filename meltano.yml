@@ -39,6 +39,7 @@ plugins:
     - name: cloud_provider.aws.aws_endpoint_override
     - name: prefix
     - name: stream_name_path_override
+    - name: stream_name_function_applied
     - name: include_process_date
       kind: boolean
       value: false
@@ -55,6 +56,8 @@ plugins:
       value: true
     - name: append_date_to_filename_grain
       value: microsecond
+    - name: append_date_shift_back_seconds
+      value: 0
     - name: flatten_records
       kind: boolean
       value: false
