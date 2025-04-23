@@ -3,7 +3,7 @@ import inflection
 import json
 import collections
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from abc import ABCMeta, abstractmethod
 
 from boto3 import Session
@@ -49,6 +49,10 @@ class FormatBase(metaclass=ABCMeta):
         self.compression = "gz"  # TODO: need a list of compatible compression types
 
         self.stream_name_path_override = config.get("stream_name_path_override", None)
+        
+        # KKC config extension
+        self.stream_name_function_applied = config.get("stream_name_function_applied", None)
+        self.append_date_shift_back_seconds = config.get("append_date_shift_back_seconds", None)
 
         if self.cloud_provider.get("cloud_provider_type", None) == "aws":
             aws_config = self.cloud_provider.get("aws", None)
@@ -105,9 +109,13 @@ class FormatBase(metaclass=ABCMeta):
             self.records = self.append_process_date(self.records)
 
     def create_key(self) -> str:
-        batch_start = self.context["batch_start_time"]
+        batch_start = self.context["batch_start_time"] - timedelta(seconds=self.append_date_shift_back_seconds)
         stream_name = (
-            self.context["stream_name"]
+            (
+                self.context["stream_name"]
+                if self.stream_name_function_applied is None
+                else eval(f'"{self.context["stream_name"]}".{self.stream_name_function_applied}')
+            )
             if self.stream_name_path_override is None
             else self.stream_name_path_override
         )
