@@ -182,9 +182,14 @@ class Targets3(Target):
             default="day",
         ),
         th.Property(
+            "append_date_override",
+            th.StringType,
+            description="The date to append override.",
+        ),
+        th.Property(
             "append_date_shift_back_seconds",
             th.IntegerType,
-            description="The seconds to shift back on the date to append",
+            description="The seconds to shift back on the date to append.",
             default=0,
         ),
         th.Property(

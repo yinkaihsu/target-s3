@@ -56,6 +56,7 @@ plugins:
       value: true
     - name: append_date_to_filename_grain
       value: microsecond
+    - name: append_date_override
     - name: append_date_shift_back_seconds
       value: 0
     - name: flatten_records
