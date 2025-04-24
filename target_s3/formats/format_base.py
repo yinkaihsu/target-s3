@@ -52,6 +52,7 @@ class FormatBase(metaclass=ABCMeta):
         
         # KKC config extension
         self.stream_name_function_applied = config.get("stream_name_function_applied", None)
+        self.append_date_override = config.get("append_date_override", None)
         self.append_date_shift_back_seconds = config.get("append_date_shift_back_seconds", None)
 
         if self.cloud_provider.get("cloud_provider_type", None) == "aws":
@@ -109,7 +110,11 @@ class FormatBase(metaclass=ABCMeta):
             self.records = self.append_process_date(self.records)
 
     def create_key(self) -> str:
-        batch_start = self.context["batch_start_time"] - timedelta(seconds=self.append_date_shift_back_seconds)
+        try:
+            batch_start = datetime.fromisoformat(self.append_date_override)
+        except:
+            batch_start = self.context["batch_start_time"]
+        batch_start = batch_start - timedelta(seconds=self.append_date_shift_back_seconds)
         stream_name = (
             (
                 self.context["stream_name"]
